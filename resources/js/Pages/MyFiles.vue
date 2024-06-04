@@ -29,20 +29,21 @@
                 <tr
                     v-for="file of files.data"
                     :key="file.id"
+                    @dblclick="openFolder(file)"
                     class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100"
                 >
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 "
+                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
                     >
                         {{ file.name }}
                     </td>
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 "
+                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
                     >
                         {{ file.owner }}
                     </td>
                     <td
-                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 "
+                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
                     >
                         {{ file.updated_at }}
                     </td>
@@ -53,14 +54,28 @@
                     </td>
                 </tr>
             </tbody>
-        </table></AuthenticatedLayout
-    >
+        </table>
+        <div
+            v-if="!files.data.length"
+            class="py-8 text-center text-lg text-gray-400"
+        >
+            There is not table in this folder
+        </div>
+    </AuthenticatedLayout>
 </template>
 
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { router } from "@inertiajs/vue3";
 
 const { file } = defineProps({
     files: Object,
 });
+
+function openFolder(file) {
+    if (!file.is_folder) {
+        return;
+    }
+    router.visit(route("myFiles", { folder: file.path }));
+}
 </script>

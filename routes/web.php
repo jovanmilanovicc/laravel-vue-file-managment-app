@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/my-files', [FileController::class, 'myFiles'])->name("myFiles");
+    Route::get('/my-files/{folder?}', [FileController::class, 'myFiles'])->where('folder', '(.*)')->name("myFiles");
     Route::post('/folder/create', [FileController::class, 'createFolder'])->name("folder.create");
 });
 

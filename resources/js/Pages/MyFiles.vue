@@ -30,7 +30,7 @@
                     v-for="file of files.data"
                     :key="file.id"
                     @dblclick="openFolder(file)"
-                    class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100"
+                    class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100 cursor-pointer"
                 >
                     <td
                         class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"

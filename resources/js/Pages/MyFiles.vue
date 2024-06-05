@@ -111,7 +111,7 @@ import { HomeIcon } from "@heroicons/vue/20/solid";
 const { file } = defineProps({
     files: Object,
     folder: Object,
-    ancestors: Array,
+    ancestors: Object,
 });
 
 function openFolder(file) {

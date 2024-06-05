@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/my-files/{folder?}', [FileController::class, 'myFiles'])->where('folder', '(.*)')->name("myFiles");
     Route::post('/folder/create', [FileController::class, 'createFolder'])->name("folder.create");
+    Route::post('/file', [FileController::class, 'store'])->name("file.store");
 });
 
 require __DIR__ . '/auth.php';

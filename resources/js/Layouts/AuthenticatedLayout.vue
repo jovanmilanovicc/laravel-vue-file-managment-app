@@ -2,12 +2,8 @@
     <div class="min-h-screen bg-gray-100 flex w-full gap-4">
         <Navigation />
         <!-- Page Content -->
-        <main
-            @drop.prevent="handleDrop"
-            @dragover.prevent="onDragOver"
-            @dragleave.prevent="onDragLeave"
-            class="flex flex-col px-4 flex-1 overflow-hidden min-h-full w-full"
-        >
+        <main @drop.prevent="handleDrop" @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave"
+            class="flex flex-col px-4 flex-1 overflow-hidden min-h-full w-full">
             <div v-if="dragOver" class="text-gray-500 text-center py-8 text-sm">
                 Drop Files to upload
             </div>
@@ -16,10 +12,13 @@
                     <SearchForm />
                     <UserSettingsDropdown />
                 </div>
-                <div class="flex-1 flex flex-col overflow-hidden"><slot /></div>
+                <div class="flex-1 flex flex-col overflow-hidden">
+                    <slot />
+                </div>
             </div>
         </main>
     </div>
+    <FormProgress :form="fileUploadForm" />
 </template>
 
 <script setup>
@@ -29,6 +28,7 @@ import Navigation from "@/Components/app/Navigation.vue";
 import UserSettingsDropdown from "@/Components/app/UserSettingsDropdown.vue";
 import { emitter, FILE_UPLOAD_STARTED } from "@/event-bus";
 import { useForm, usePage } from "@inertiajs/vue3";
+import FormProgress from "@/Components/app/FormProgress.vue";
 
 const page = usePage();
 
@@ -65,7 +65,22 @@ function uploadFiles(files) {
         (file) => file.webkitRelativePath
     );
 
-    fileUploadForm.post(route("file.store"));
+    fileUploadForm.post(route("file.store"), {
+        onSuccess: () => {
+
+        },
+        onError: errors => {
+            let message = "";
+            if ((Object.keys(errors)).length > 0) {
+                message = errors[Object.keys(errors)[0]]
+            } else {
+                message = "Error during file uplaod"
+            }
+
+            
+        }
+    });
+
 }
 
 onMounted(() => {

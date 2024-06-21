@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyFilesRequest;
 use App\Http\Requests\StoreFileRequest;
 use App\Http\Requests\StoreFolderRequest;
 use App\Http\Resources\FileResource;
+use Illuminate\Http\Request;
 use App\Models\File;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class FileController extends Controller
 {
-    public function myFiles(string $folder = null)
+    public function myFiles(Request $request, string $folder = null)
     {
         try {
             if ($folder) {
@@ -31,6 +33,10 @@ class FileController extends Controller
                 ->paginate(10);
 
             $files = FileResource::collection($files);
+
+            if ($request->wantsJson()) {
+                return $files;
+            }
 
             $ancestors = FileResource::collection([...$folder->ancestors, $folder]);
 
@@ -78,6 +84,11 @@ class FileController extends Controller
                 $this->saveFile($file, $user, $parent);
             }
         }
+    }
+
+    public function destroy(DestroyFilesRequest $request)
+    {
+
     }
 
     private function getRoot()

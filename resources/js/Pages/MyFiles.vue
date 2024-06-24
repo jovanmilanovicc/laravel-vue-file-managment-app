@@ -23,6 +23,7 @@
         </li>
       </ol>
       <div>
+        <DowloadFilesButton :all="allSelected" :ids="selectedIds" class="mr-2" />
         <DeleteFilesButton :deleteAll="allSelected" :deleteIds="selectedIds" @delete="onDelete"/>
       </div>
     </nav>
@@ -89,6 +90,7 @@ import FileIcon from "@/Components/app/FileIcon.vue";
 import { HomeIcon } from "@heroicons/vue/20/solid";
 import CheckBox from "@/Components/Checkbox.vue";
 import DeleteFilesButton from "@/Components/app/DeleteFilesButton.vue";
+import DowloadFilesButton from "@/Components/app/DowloadFilesButton.vue";
 
 const allSelected = ref(false);
 const selected = ref({});
@@ -105,11 +107,8 @@ const allFiles = ref({
   next: props.files.links.next,
 });
 
-const selectedIds = computed(() =>
-  Object.entries(selected.value)
-    .filter((a) => a[1])
-    .map((a) => a[0])
-);
+const selectedIds = computed(() => Object.entries(selected.value).filter(a => a[1]).map(a => a[0]))
+
 
 function openFolder(file) {
   if (!file.is_folder) {

@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/folder/create', [FileController::class, 'createFolder'])->name("folder.create");
     Route::post('/file', [FileController::class, 'store'])->name("file.store");
     Route::delete('/file', [FileController::class, 'destroy'])->name("file.delete");
+    Route::get('/file/dowload', [FileController::class, 'dowload'])->name("file.dowload");
+    Route::get('/trash', [FileController::class, 'trash'])->name("file.trash");
 });
 
 require __DIR__ . '/auth.php';

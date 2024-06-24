@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -38,7 +39,7 @@ class File extends Model
             get: function (mixed $value, array $attributes) {
                 return $attributes['created_by'] == Auth::id() ? 'me' : $this->user->name;
             }
-        );
+        );  
     }
 
     public function isOwnedBy($userId): bool
@@ -71,10 +72,10 @@ class File extends Model
             $model->path = (!$model->parent->isRoot() ? $model->parent->path . '/' : '') . Str::slug($model->name);
         });
 
-        //        static::deleted(function(File $model) {
-        //            if (!$model->is_folder) {
-        //                Storage::delete($model->storage_path);
-        //            }
-        //        });
+        // static::deleted(function (File $model) {
+        //     if (!$model->is_folder) {
+        //         Storage::delete($model->storage_path);
+        //     }
+        // });
     }
 }

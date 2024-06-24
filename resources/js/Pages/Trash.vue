@@ -52,12 +52,11 @@
 
 <script setup>
 import { computed, onMounted, onUpdated, ref } from "vue";
-import { router, Link } from "@inertiajs/vue3";
 import { httpGet } from "@/helper/http-helper";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import FileIcon from "@/Components/app/FileIcon.vue";
-import { HomeIcon } from "@heroicons/vue/20/solid";
-import CheckBox from "@/Components/Checkbox.vue";
+import RestoreFilesButton from "@/Components/app/RestoreFilesButton.vue";
+import DeleteForeverButton from "@/Components/app/DeleteForeverButton.vue";
 
 const allSelected = ref(false);
 const selected = ref({});
@@ -118,7 +117,7 @@ function onSelectChangeCheckbox(file) {
     }
 }
 
-function onDelete() {
+function resetForm() {
     allSelected.value = false;
     selected.value = {}
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FilesActionRequest;
 use App\Http\Requests\StoreFileRequest;
 use App\Http\Requests\StoreFolderRequest;
+use App\Http\Requests\TrashFilesRequest;
 use App\Http\Resources\FileResource;
 use Illuminate\Http\Request;
 use App\Models\File;
@@ -234,13 +235,41 @@ class FileController extends Controller
             }
         }
     }
-    public function restore()
+    public function restore(TrashFilesRequest $request)
     {
+        $data = $request->validated();
 
+        if ($data['all']) {
+            $children = File::onlyTrashed()->get();
+            foreach ($children as $child) {
+                $child->restore();
+            }
+        } else {
+            $ids = $data['ids'] ?? [];
+            $children = File::onlyTrashed()->whereIn('id', $ids)->get();
+            foreach ($children as $child) {
+                $child->restore();
+            }
+        }
+        return to_route('trash');
     }
 
-    public function deleteForever()
+    public function deleteForever(TrashFilesRequest $request)
     {
-        
+        $data = $request->validated();
+
+        if ($data['all']) {
+            $children = File::onlyTrashed()->get();
+            foreach ($children as $child) {
+                $child->deleteForever();
+            }
+        } else {
+            $ids = $data['ids'] ?? [];
+            $children = File::onlyTrashed()->whereIn('id', $ids)->get();
+            foreach ($children as $child) {
+                $child->deleteForever();
+            }
+        }
+        return to_route('trash');
     }
 }

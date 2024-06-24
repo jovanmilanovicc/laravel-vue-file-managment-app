@@ -41,6 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/file', [FileController::class, 'destroy'])->name("file.delete");
     Route::get('/file/dowload', [FileController::class, 'dowload'])->name("file.dowload");
     Route::get('/trash', [FileController::class, 'trash'])->name("file.trash");
+    Route::post('/restore', [FileController::class, 'restore'])->name("file.restore");
+    Route::delete('/file/delete-forever', [FileController::class, 'deleteForever'])->name("file.deleteForever");
 });
 
 require __DIR__ . '/auth.php';

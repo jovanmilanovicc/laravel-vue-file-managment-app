@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddToFavoritesRequest;
 use App\Http\Requests\FilesActionRequest;
 use App\Http\Requests\StoreFileRequest;
 use App\Http\Requests\StoreFolderRequest;
@@ -9,6 +10,8 @@ use App\Http\Requests\TrashFilesRequest;
 use App\Http\Resources\FileResource;
 use Illuminate\Http\Request;
 use App\Models\File;
+use App\Models\StaredFile;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -30,6 +33,7 @@ class FileController extends Controller
             }
 
             $files = File::query()
+                ->with('starred')
                 ->where("parent_id", $folder->id)
                 ->where("created_by", Auth::id())
                 ->orderBy('is_folder', 'desc')
@@ -269,5 +273,36 @@ class FileController extends Controller
             }
         }
         return to_route('file.trash');
+    }
+
+    public function addToFavorites(AddToFavoritesRequest $request)
+    {
+        $data = $request->validated();
+
+        $id = $data['id'];
+
+        if (empty($ids)) {
+            return ['message' => "Please select file to add to favorites"];
+        }
+
+        $file = File::find($id);
+
+        $staredFile = StaredFile::query()
+            ->where("file_id", $file->id)
+            ->where("user_id", Auth::id())
+            ->first();
+
+        if ($staredFile) {
+            $staredFile->delete();
+        } else {
+            StaredFile::create([
+                'file_id' => $file->id,
+                'user_id' => Auth::id(),
+                "created_at" => Carbon::now(),
+                "updated_at" => Carbon::now()
+            ]);
+        }
+
+        return redirect()->back();
     }
 }

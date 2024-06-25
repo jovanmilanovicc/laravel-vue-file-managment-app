@@ -57,6 +57,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import FileIcon from "@/Components/app/FileIcon.vue";
 import RestoreFilesButton from "@/Components/app/RestoreFilesButton.vue";
 import DeleteForeverButton from "@/Components/app/DeleteForeverButton.vue";
+import Checkbox from "@/Components/Checkbox.vue";
 
 const allSelected = ref(false);
 const selected = ref({});

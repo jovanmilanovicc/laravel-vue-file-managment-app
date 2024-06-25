@@ -61,8 +61,11 @@ class FileController extends Controller
             ->paginate(10);
 
         $files = FileResource::collection($files);
+        if ($request->wantsJson()) {
+            return $files;
+        }
 
-        return Inertia::render('Trash', compact($files));
+        return Inertia::render('Trash', compact("files"));
     }
 
     public function createFolder(StoreFolderRequest $request)
@@ -96,8 +99,6 @@ class FileController extends Controller
             $this->saveFileTree($fileTree, $parent, $user);
         } else {
             foreach ($data['files'] as $file) {
-                /** @var \Illuminate\Http\UploadedFile $file */
-
                 $this->saveFile($file, $user, $parent);
             }
         }
@@ -132,8 +133,6 @@ class FileController extends Controller
 
         $all = $data['all'] ?? false;
         $ids = $data['ids'] ?? [];
-
-
 
         if (!$all && empty($ids)) {
             return ['message' => 'Please select files to dowload'];
@@ -185,7 +184,6 @@ class FileController extends Controller
                 $parent->appendNode($folder);
                 $this->saveFileTree($file, $folder, $user);
             } else {
-
                 $this->saveFile($file, $user, $parent);
             }
         }
@@ -251,7 +249,7 @@ class FileController extends Controller
                 $child->restore();
             }
         }
-        return to_route('trash');
+        return to_route('file.trash');
     }
 
     public function deleteForever(TrashFilesRequest $request)
@@ -270,6 +268,6 @@ class FileController extends Controller
                 $child->deleteForever();
             }
         }
-        return to_route('trash');
+        return to_route('file.trash');
     }
 }

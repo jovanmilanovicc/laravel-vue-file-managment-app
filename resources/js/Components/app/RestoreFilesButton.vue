@@ -26,7 +26,7 @@ const page = usePage();
 const form = useForm({
     all: null,
     ids: [],
-    parrent_id: null
+    parent_id: null
 });
 
 const props = defineProps({
@@ -66,7 +66,7 @@ function onConfirm() {
 
     form.post(route('file.restore'), {
         onSuccess: () => {
-            showDeleteDialog.value = false;
+            showConfirmationDialog.value = false;
             emit('restore');
             //Todo show success notification
             showSuccessNotification("Selected files have been restored")

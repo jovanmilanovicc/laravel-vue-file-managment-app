@@ -26,7 +26,7 @@ const page = usePage();
 const form = useForm({
     all: null,
     ids: [],
-    parrent_id: null
+    parent_id: null
 });
 
 const props = defineProps({
@@ -67,7 +67,7 @@ function onConfirm() {
 
     form.delete(route('file.deleteForever'), {
         onSuccess: () => {
-            showDeleteDialog.value = false;
+            showConfirmationDialog.value = false;
             emit('delete');
             //Todo show success notification
             showSuccessNotification("Selected files have been deleted forever")

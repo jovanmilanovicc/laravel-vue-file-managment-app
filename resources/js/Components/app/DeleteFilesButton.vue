@@ -23,7 +23,7 @@ const page = usePage();
 const deleteFilesForm = useForm({
   all: null,
   ids: [],
-  parrent_id: null
+  parent_id: null
 });
 
 const props = defineProps({
@@ -55,7 +55,7 @@ function onDeleteCandel() {
 }
 
 function onDeleteConfirm() {
-  deleteFilesForm.parrent_id = page.props.folder.id;
+  deleteFilesForm.parent_id = page.props.folder.id;
   if (props.deleteAll) {
     deleteFilesForm.all = true
   } else {

@@ -22,10 +22,10 @@
           </div>
         </li>
       </ol>
-      <div>
-        <label>
+      <div class="flex">
+        <label class="flex items-center mr-3 ">
           Only Favorites
-          <CheckBox @change="showOnlyFavorites" v-model:checked="allSelected" />
+          <CheckBox @change="showOnlyFavourites" v-model:checked="onlyFavorites" class="ml-2" />
         </label>
         <DowloadFilesButton :all="allSelected" :ids="selectedIds" class="mr-2" />
         <DeleteFilesButton :deleteAll="allSelected" :deleteIds="selectedIds" @delete="onDelete" />
@@ -120,6 +120,7 @@ const page = usePage();
 const allSelected = ref(false);
 const selected = ref({});
 const loadMoreIntersect = ref(null);
+const onlyFavorites = ref(false);
 
 const props = defineProps({
   files: Object,
@@ -132,7 +133,9 @@ const allFiles = ref({
   next: props.files.links.next,
 });
 
-const selectedIds = computed(() => Object.entries(selected.value).filter(a => a[1]).map(a => a[0]))
+const selectedIds = computed(() => Object.entries(selected.value).filter(a => a[1]).map(a => a[0]));
+
+let params = null;
 
 
 function openFolder(file) {
@@ -194,16 +197,23 @@ function addRemoveFavourite(file) {
   httpPost(route('file.addToFavorites'), {
     id: file.id
   }).then((res) => {
-    file.is_favorite = !file.is_favorite;
-    showSuccessNotification("Selected file has been added to favorites")
+    file.is_favourite = !file.is_favourite
+    showSuccessNotification("Selected file has been added to favourites")
   })
 }
 
-function showOnlyFavorites(){
-  
+function showOnlyFavourites() {
+  if (onlyFavorites.value) {
+    params.set('favourites', 1)
+  } else {
+    params.delete('favourites')
+  }
+  router.get(window.location.pathname + '?' + params.toString())
 }
 
 onMounted(() => {
+  params = new URLSearchParams(window.location.search)
+  onlyFavorites.value = params.get('favourites') === '1'
   const observer = new IntersectionObserver(
     (entries) =>
       entries.forEach((entrie) => {
@@ -217,6 +227,7 @@ onMounted(() => {
 });
 
 onUpdated(() => {
+
   allFiles.value = {
     data: props.files.data,
     next: props.files.links.next,

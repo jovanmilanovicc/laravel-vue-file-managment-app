@@ -32,13 +32,22 @@ class FileController extends Controller
                 $folder = $this->getRoot();
             }
 
-            $files = File::query()
+            $favourites = (int)$request->get('favourites');
+            
+            $query = File::query()
+                ->select("files.*")
                 ->with('starred')
                 ->where("parent_id", $folder->id)
                 ->where("created_by", Auth::id())
                 ->orderBy('is_folder', 'desc')
-                ->orderBy("created_at", 'desc')
-                ->paginate(10);
+                ->orderBy("files.created_at", 'desc')
+                ->orderBy("files.id", "desc");
+            if ($favourites == 1) {
+                $query->join("stared_files", "stared_files.id", "files.id")
+                    ->where('stared_files.user_id', Auth::id());
+            }
+
+            $files = $query->paginate(10);
 
             $files = FileResource::collection($files);
 
@@ -280,26 +289,22 @@ class FileController extends Controller
         $data = $request->validated();
 
         $id = $data['id'];
-
-        if (empty($ids)) {
-            return ['message' => "Please select file to add to favorites"];
-        }
-
         $file = File::find($id);
+        $user_id = Auth::id();
 
-        $staredFile = StaredFile::query()
-            ->where("file_id", $file->id)
-            ->where("user_id", Auth::id())
+        $starredFile = StaredFile::query()
+            ->where('file_id', $file->id)
+            ->where('user_id', $user_id)
             ->first();
 
-        if ($staredFile) {
-            $staredFile->delete();
+        if ($starredFile) {
+            $starredFile->delete();
         } else {
             StaredFile::create([
                 'file_id' => $file->id,
-                'user_id' => Auth::id(),
-                "created_at" => Carbon::now(),
-                "updated_at" => Carbon::now()
+                'user_id' => $user_id,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
 

@@ -59,7 +59,6 @@ class StoreFileRequest extends ParentIdBaseRequest
                 'string',
                 function ($attribute, $value, $fail) {
                     if ($value) {
-                        /** @var $value \Illuminate\Http\UploadedFile */
                         $file = File::query()->where('name', $value)
                             ->where('created_by', Auth::id())
                             ->where('parent_id', $this->parent_id)

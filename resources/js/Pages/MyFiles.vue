@@ -27,6 +27,7 @@
           Only Favorites
           <CheckBox @change="showOnlyFavourites" v-model:checked="onlyFavorites" class="ml-2" />
         </label>
+        <ShareFilesButton :all-selected="allSelected" :selected-ids="selectedIdsc" />
         <DowloadFilesButton :all="allSelected" :ids="selectedIds" class="mr-2" />
         <DeleteFilesButton :deleteAll="allSelected" :deleteIds="selectedIds" @delete="onDelete" />
       </div>
@@ -113,6 +114,7 @@ import { HomeIcon } from "@heroicons/vue/20/solid";
 import CheckBox from "@/Components/Checkbox.vue";
 import DeleteFilesButton from "@/Components/app/DeleteFilesButton.vue";
 import DowloadFilesButton from "@/Components/app/DowloadFilesButton.vue";
+import ShareFilesButton from "@/Components/app/ShareFilesButton.vue";
 import { showSuccessNotification } from "@/event-bus";
 
 const page = usePage();

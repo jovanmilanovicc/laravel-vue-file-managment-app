@@ -44,6 +44,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/restore', [FileController::class, 'restore'])->name("file.restore");
     Route::delete('/file/delete-forever', [FileController::class, 'deleteForever'])->name("file.deleteForever");
     Route::post('/file/add-to-favorites', [FileController::class, 'addToFavorites'])->name("file.addToFavorites");
+    Route::post('/file/share', [FileController::class, 'share'])->name("file.share");
+    Route::get('/shared-with-me', 'sharedWithMe')->name('file.sharedWithMe');
+    Route::get('/shared-by-me', 'sharedByMe')->name('file.sharedByMe');
 });
 
 require __DIR__ . '/auth.php';
